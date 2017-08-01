@@ -97,3 +97,23 @@ HAVING avg(stars) = (SELECT min(averages.average)
 							FROM movie_tbl as movie left join rating_tbl as rating
 							ON movie.mID = rating.mID
 							group by movie.mID) as averages)*/
+
+########################QUESTION 6####################################
+
+SELECT DISTINCT movie.director, movie.title, max(rating.stars)
+FROM movie_tbl as movie join rating_tbl as rating
+ON movie.mID = rating.mID
+GROUP BY movie.director
+HAVING movie.director in (SELECT Distinct director 
+						FROM movie_tbl as movie join rating_tbl as rating
+						ON movie.mID = rating.mID
+						WHERE director IS NOT NULL)
+ORDER BY movie.director;
+
+########################QUESTION 7####################################
+
+
+
+
+
+
