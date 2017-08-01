@@ -2,17 +2,17 @@
 mID int(3) auto_increment primary key,
 title varchar(256) NOT NULL,
 year int(4) NOT NULL,
-director varchar(256))
+director varchar(256));
 
 CREATE TABLE reviewer_tbl (
 rID int(3) auto_increment primary key,
-name varchar(256))
+name varchar(256));
 
 CREATE TABLE rating_tbl (
 rID int(3),
 mID int(3),
 stars int(1),
-ratingDate Date)*/
+ratingDate Date);*/
 
 
 /*insert into movie_tbl values(101, 'Gone with the Wind', 1939, 'Victor Fleming');
@@ -53,7 +53,7 @@ insert into rating_tbl values(208, 104, 3, '2011-01-02');
 SELECT title as Title, max(stars) - min(stars) as 'Star Difference'
 FROM movie_tbl as movie left join rating_tbl as rating
 ON movie.mID = rating.mID
-group by movie.mID*/
+group by movie.mID;*/
 
 ########################QUESTION 2####################################
 
@@ -63,7 +63,7 @@ FROM movie_tbl as movie join (SELECT title, year, avg(stars) as average
 						ON movie.mID = rating.mID
 						group by movie.mID) as average_ratings
 ON movie.year = average_ratings.year
-group by movie.year < 1980*/
+group by movie.year < 1980;*/
 
 ########################QUESTION 3####################################
 
@@ -72,7 +72,7 @@ FROM movie_tbl
 WHERE director in (SELECT a.director FROM movie_tbl as a
 		group by a.director
 		having count(a.director) > 1)
-order by director, title*/
+order by director, title;*/
 
 ########################QUESTION 4####################################
 
@@ -84,7 +84,7 @@ HAVING avg(stars) = (SELECT max(averages.average)
 					FROM (SELECT movie.title, avg(stars) as average
 							FROM movie_tbl as movie left join rating_tbl as rating
 							ON movie.mID = rating.mID
-							group by movie.mID) as averages)*/
+							group by movie.mID) as averages);*/
 
 ########################QUESTION 5####################################
 
@@ -96,11 +96,11 @@ HAVING avg(stars) = (SELECT min(averages.average)
 					FROM (SELECT movie.title, avg(stars) as average
 							FROM movie_tbl as movie left join rating_tbl as rating
 							ON movie.mID = rating.mID
-							group by movie.mID) as averages)*/
+							group by movie.mID) as averages);*/
 
 ########################QUESTION 6####################################
 
-SELECT DISTINCT movie.director, movie.title, max(rating.stars)
+/*SELECT DISTINCT movie.director, movie.title, max(rating.stars)
 FROM movie_tbl as movie join rating_tbl as rating
 ON movie.mID = rating.mID
 GROUP BY movie.director
@@ -108,12 +108,14 @@ HAVING movie.director in (SELECT Distinct director
 						FROM movie_tbl as movie join rating_tbl as rating
 						ON movie.mID = rating.mID
 						WHERE director IS NOT NULL)
-ORDER BY movie.director;
+ORDER BY movie.director;*/
 
 ########################QUESTION 7####################################
 
+/*SELECT *
+FROM movie_tbl as movie natural join rating_tbl as rating natural join reviewer_tbl as review
+WHERE director = name;*/
 
-
-
+########################QUESTION 8####################################
 
 
