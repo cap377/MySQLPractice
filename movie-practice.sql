@@ -128,12 +128,19 @@ ORDER BY name, title;*/
 
 ######################## QUESTION 9 ####################################
 
-SELECT *
-FROM reviewer_tbl as review NATURAL JOIN rating_tbl as rating
-WHERE 1 < (SELECT count(mID)
-				FROM reviewer_tbl as re NATURAL JOIN rating_tbl as ra
-                WHERE rating.mID = ra.mID)
-ORDER BY mID;
+SELECT DISTINCT
+    review.name AS name1, review2.name AS name2, rating.mID
+FROM
+    reviewer_tbl AS review,
+    rating_tbl AS rating,
+    reviewer_tbl AS review2,
+    rating_tbl AS rating2
+WHERE
+    review.name < review2.name
+        AND rating.mID = rating2.mID
+        AND rating.rID = review.rID
+        AND review2.rID = rating2.rID
+ORDER BY rating.mID;
 
 ######################## QUESTION 10 ####################################
 
