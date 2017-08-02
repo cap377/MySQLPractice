@@ -46,85 +46,139 @@ insert into rating_tbl values(205, 108, 4, null);
 insert into rating_tbl values(206, 107, 3, '2011-01-15');
 insert into rating_tbl values(206, 106, 5, '2011-01-19');
 insert into rating_tbl values(207, 107, 5, '2011-01-20');
-insert into rating_tbl values(208, 104, 3, '2011-01-02');
+insert into rating_tbl values(208, 104, 3, '2011-01-02');*/
 
 ######################### QUESTION 1 ##################################
 
-SELECT title as Title, max(stars) - min(stars) as 'Star Difference'
-FROM movie_tbl as movie left join rating_tbl as rating
-ON movie.mID = rating.mID
-group by movie.mID;*/
+SELECT 
+    title AS Title, MAX(stars) - MIN(stars) AS 'Star Difference'
+FROM
+    movie_tbl AS movie
+        LEFT JOIN
+    rating_tbl AS rating ON movie.mID = rating.mID
+GROUP BY movie.mID;
 
 ######################## QUESTION 2 ####################################
 
-/*SELECT (SELECT avg(average)
-FROM (SELECT title, year, avg(stars) as average
-		FROM movie_tbl as movie left join rating_tbl as rating
-		ON movie.mID = rating.mID
-		GROUP BY movie.mID) as averages
-		WHERE year < 1980) - (SELECT avg(average)
-							FROM (SELECT title, year, avg(stars) as average
-									FROM movie_tbl as movie left join rating_tbl as rating
-									ON movie.mID = rating.mID
-									GROUP BY movie.mID) as averages
-									WHERE year >= 1980) as Difference;*/
+SELECT 
+    (SELECT 
+            AVG(average)
+        FROM
+            (SELECT 
+                title, year, AVG(stars) AS average
+            FROM
+                movie_tbl AS movie
+            LEFT JOIN rating_tbl AS rating ON movie.mID = rating.mID
+            GROUP BY movie.mID) AS averages
+        WHERE
+            year < 1980) - (SELECT 
+            AVG(average)
+        FROM
+            (SELECT 
+                title, year, AVG(stars) AS average
+            FROM
+                movie_tbl AS movie
+            LEFT JOIN rating_tbl AS rating ON movie.mID = rating.mID
+            GROUP BY movie.mID) AS averages
+        WHERE
+            year >= 1980) AS Difference;
 
 ######################## QUESTION 3 ####################################
 
-/*SELECT director as Director, title
-FROM movie_tbl
-WHERE director in (SELECT a.director FROM movie_tbl as a
-		group by a.director
-		having count(a.director) > 1)
-order by director, title;*/
+SELECT 
+    director AS Director, title
+FROM
+    movie_tbl
+WHERE
+    director IN (SELECT 
+            a.director
+        FROM
+            movie_tbl AS a
+        GROUP BY a.director
+        HAVING COUNT(a.director) > 1)
+ORDER BY director , title;
 
 ######################## QUESTION 4 ####################################
 
-/*SELECT movie.title, avg(stars)
-FROM rating_tbl as rating join movie_tbl as movie
-ON movie.mID = rating.mID
+SELECT 
+    movie.title, AVG(stars)
+FROM
+    rating_tbl AS rating
+        NATURAL JOIN
+    movie_tbl AS movie
 GROUP BY rating.mID
-HAVING avg(stars) = (SELECT max(averages.average)
-					FROM (SELECT movie.title, avg(stars) as average
-							FROM movie_tbl as movie left join rating_tbl as rating
-							ON movie.mID = rating.mID
-							group by movie.mID) as averages);/*
+HAVING AVG(stars) = (SELECT 
+        MAX(averages.average)
+    FROM
+        (SELECT 
+            movie.title, AVG(stars) AS average
+        FROM
+            movie_tbl AS movie
+        NATURAL JOIN rating_tbl AS rating
+        GROUP BY movie.mID) AS averages);
 
 ######################## QUESTION 5 ####################################
 
-/*SELECT movie.title, avg(stars)
-FROM rating_tbl as rating join movie_tbl as movie
-ON movie.mID = rating.mID
+SELECT 
+    movie.title, AVG(stars)
+FROM
+    rating_tbl AS rating
+        NATURAL JOIN
+    movie_tbl AS movie
 GROUP BY rating.mID
-HAVING avg(stars) = (SELECT min(averages.average)
-					FROM (SELECT movie.title, avg(stars) as average
-							FROM movie_tbl as movie left join rating_tbl as rating
-							ON movie.mID = rating.mID
-							group by movie.mID) as averages);*/
+HAVING AVG(stars) = (SELECT 
+        MIN(averages.average)
+    FROM
+        (SELECT 
+            movie.title, AVG(stars) AS average
+        FROM
+            movie_tbl AS movie
+        NATURAL JOIN rating_tbl AS rating
+        GROUP BY movie.mID) AS averages);
 
 ######################## QUESTION 6 ####################################
 
-/*SELECT DISTINCT movie.director, movie.title, max(rating.stars)
-FROM movie_tbl as movie JOIN rating_tbl as rating
-ON movie.mID = rating.mID
+SELECT DISTINCT
+    movie.director, movie.title, MAX(rating.stars)
+FROM
+    movie_tbl AS movie
+        JOIN
+    rating_tbl AS rating ON movie.mID = rating.mID
 GROUP BY movie.director
-HAVING movie.director in (SELECT Distinct director 
-						FROM movie_tbl as movie JOIN rating_tbl as rating
-						ON movie.mID = rating.mID
-						WHERE director IS NOT NULL)
-ORDER BY movie.director;*/
+HAVING movie.director IN (SELECT DISTINCT
+        director
+    FROM
+        movie_tbl AS movie
+            JOIN
+        rating_tbl AS rating ON movie.mID = rating.mID
+    WHERE
+        director IS NOT NULL)
+ORDER BY movie.director;
 
 ######################## QUESTION 7 ####################################
 
-/*SELECT *
-FROM movie_tbl as movie NATURAL JOIN rating_tbl as rating NATURAL JOIN reviewer_tbl as review
-WHERE director = name;*/
+SELECT 
+    *
+FROM
+    movie_tbl AS movie
+        NATURAL JOIN
+    rating_tbl AS rating
+        NATURAL JOIN
+    reviewer_tbl AS review
+WHERE
+    director = name;
 
 ######################## QUESTION 8 ####################################
 
-/*SELECT concat(name, ' - ', title)
-FROM reviewer_tbl NATURAL JOIN rating_tbl NATURAL JOIN movie_tbl
-ORDER BY name, title;*/
+SELECT 
+    CONCAT(name, ' - ', title)
+FROM
+    reviewer_tbl
+        NATURAL JOIN
+    rating_tbl
+        NATURAL JOIN
+    movie_tbl
+ORDER BY name , title;
 
 ######################## QUESTION 9 ####################################
 
@@ -144,7 +198,16 @@ ORDER BY rating.mID;
 
 ######################## QUESTION 10 ####################################
 
-/*SELECT name, title, stars
-FROM rating_tbl NATURAL JOIN reviewer_tbl NATURAL JOIN movie_tbl
-WHERE stars IN (SELECT MIN(stars) 
-				FROM rating_tbl);*/
+SELECT 
+    name, title, stars
+FROM
+    rating_tbl
+        NATURAL JOIN
+    reviewer_tbl
+        NATURAL JOIN
+    movie_tbl
+WHERE
+    stars IN (SELECT 
+            MIN(stars)
+        FROM
+            rating_tbl);
