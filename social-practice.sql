@@ -1,7 +1,7 @@
 /*
 CREATE TABLE Highschooler (
 	ID int(6) primary key,
-    name varchar(255) NOT NULL,
+    name varchar(255),
     grade int(12));
     
 CREATE TABLE Friend (
@@ -230,3 +230,36 @@ END; //
 DELIMITER ;
 
 ######################## QUESTION 3 ###################################
+
+DELIMITER //
+CREATE TRIGGER checkGraduation
+BEFORE UPDATE ON Highschooler
+FOR EACH ROW
+BEGIN
+	IF (new.grade > 12)
+		THEN SET new.grade = 99;
+    END IF;
+END; //
+DELIMITER ;
+
+######################## QUESTION 4 ###################################
+
+DELIMITER //
+CREATE TRIGGER insertingFriendship
+BEFORE INSERT ON Friend
+FOR EACH ROW
+BEGIN
+	IF (SELECT COUNT(*) FROM Friend WHERE ID2 = new.ID1 AND ID1 = new.ID2) = 0
+		THEN INSERT INTO Friend VALUE(new.ID2, new.ID1);
+    END IF;
+END; //
+DELIMITER ;
+
+######################## QUESTION 5 ###################################
+
+
+
+
+
+
+
