@@ -172,3 +172,7 @@ WHERE
 
 ######################## QUESTION 3 ###################################
 
+SELECT (COUNT(ID)) - (COUNT(DISTINCT name)) as Difference
+FROM Highschooler;
+
+######################## QUESTION 4 ###################################
