@@ -196,3 +196,10 @@ WHERE ID1 IN (SELECT ID2
 ORDER BY ID1;
 
 ######################## QUESTION 6 ###################################
+
+SELECT name, (SELECT count(*) FROM Friend WHERE id = id1) as 'Friend count', grade
+FROM Highschooler
+WHERE 'Friend count' = MAX((SELECT count(*) FROM Friend WHERE id = id1));
+
+
+
