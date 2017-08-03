@@ -38,14 +38,8 @@ INSERT INTO Friend VALUES(3, 1);
 INSERT INTO Friend VALUES(4, 2);
 INSERT INTO Friend VALUES(2, 4);
 
-INSERT INTO Friend VALUES(1, 2);
-INSERT INTO Friend VALUES(2, 1);
-
 INSERT INTO Friend VALUES(7, 2);
 INSERT INTO Friend VALUES(2, 7);
-
-INSERT INTO Friend VALUES(5, 7);
-INSERT INTO Friend VALUES(7, 5);
 
 INSERT INTO Friend VALUES(5, 6);
 INSERT INTO Friend VALUES(6, 5);
@@ -172,7 +166,22 @@ WHERE
 
 ######################## QUESTION 3 ###################################
 
-SELECT (COUNT(ID)) - (COUNT(DISTINCT name)) as Difference
-FROM Highschooler;
+SELECT 
+    (COUNT(ID)) - (COUNT(DISTINCT name)) AS Difference
+FROM
+    Highschooler;
 
 ######################## QUESTION 4 ###################################
+
+SELECT 
+    (SELECT 
+            COUNT(*)
+        FROM
+            Friend) / (SELECT 
+            COUNT(ID)
+        FROM
+            Highschooler) AS 'Friend Average';
+
+
+
+
