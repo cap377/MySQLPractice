@@ -2,7 +2,7 @@
 CREATE TABLE Highschooler (
 	ID int(6) primary key,
     name varchar(255) NOT NULL,
-    grade enum('9', '10', '11', '12') NOT NULL);
+    grade int(12));
     
 CREATE TABLE Friend (
 	ID1 int(6) NOT NULL,
@@ -12,22 +12,22 @@ CREATE TABLE Likes (
 	ID1 int(6) NOT NULL,
     ID2 int(6) NOT NULL);
     
-INSERT INTO Highschooler VALUES(1, 'Jordan', '9');
-INSERT INTO Highschooler VALUES(2, 'Gabriel', '9');
-INSERT INTO Highschooler VALUES(3, 'Tiffany', '9');
-INSERT INTO Highschooler VALUES(4, 'Cassandra', '9');
-INSERT INTO Highschooler VALUES(5, 'Kris', '10');
-INSERT INTO Highschooler VALUES(6, 'Haley', '10');
-INSERT INTO Highschooler VALUES(7, 'Andrew', '10');
-INSERT INTO Highschooler VALUES(8, 'Brittany', '10');
-INSERT INTO Highschooler VALUES(9, 'Alexis', '11');
-INSERT INTO Highschooler VALUES(10, 'Austin', '11');
-INSERT INTO Highschooler VALUES(11, 'Gabriel', '11');
-INSERT INTO Highschooler VALUES(12, 'Jessica', '11');
-INSERT INTO Highschooler VALUES(13, 'Jordan', '12');
-INSERT INTO Highschooler VALUES(14, 'John', '12');
-INSERT INTO Highschooler VALUES(15, 'Kyle', '12');
-INSERT INTO Highschooler VALUES(16, 'Logan', '12');
+INSERT INTO Highschooler VALUES(1, 'Jordan', 9);
+INSERT INTO Highschooler VALUES(2, 'Gabriel', 9);
+INSERT INTO Highschooler VALUES(3, 'Tiffany', 9);
+INSERT INTO Highschooler VALUES(4, 'Cassandra', 9);
+INSERT INTO Highschooler VALUES(5, 'Kris', 10);
+INSERT INTO Highschooler VALUES(6, 'Haley', 10);
+INSERT INTO Highschooler VALUES(7, 'Andrew', 10);
+INSERT INTO Highschooler VALUES(8, 'Brittany', 10);
+INSERT INTO Highschooler VALUES(9, 'Alexis', 11);
+INSERT INTO Highschooler VALUES(10, 'Austin', 11);
+INSERT INTO Highschooler VALUES(11, 'Gabriel', 11);
+INSERT INTO Highschooler VALUES(12, 'Jessica', 11);
+INSERT INTO Highschooler VALUES(13, 'Jordan', 12);
+INSERT INTO Highschooler VALUES(14, 'John', 12);
+INSERT INTO Highschooler VALUES(15, 'Kyle', 12);
+INSERT INTO Highschooler VALUES(16, 'Logan', 12);
 
 INSERT INTO Friend VALUES(1, 2);
 INSERT INTO Friend VALUES(2, 1);
@@ -103,21 +103,11 @@ INSERT INTO Likes VALUES(15, 12);
 SELECT * FROM Highschooler;
 SELECT * FROM Friend;
 SELECT * FROM Likes;
-
-
-CREATE TRIGGER makeFriendly 
-AFTER INSERT
-ON Highschooler
-FOR EACH ROW
-BEGIN
-	IF NEW.name = 'Friendly' AND NEW.grade = Highschooler.grade THEN
-		INSERT INTO Likes VALUES(NEW.ID, Highschooler.ID);
-		INSERT INTO Likes VALUES(Highschooler.ID, NEW.ID);
-	END IF;
-END;
 */
 
-######################## QUERIES ###################################
+######################## QUERIES ######################################
+#
+#######################################################################
 
 ######################## QUESTION 1 ###################################
 
@@ -197,9 +187,46 @@ ORDER BY ID1;
 
 ######################## QUESTION 6 ###################################
 
-SELECT name, (SELECT count(*) FROM Friend WHERE id = id1) as 'Friend count', grade
+SELECT name, grade
 FROM Highschooler
-WHERE 'Friend count' = MAX((SELECT count(*) FROM Friend WHERE id = id1));
+WHERE (SELECT COUNT(*) FROM Friend WHERE ID = ID1) = 
+(SELECT MAX((SELECT COUNT(*) FROM Friend WHERE ID = ID1)) FROM Highschooler);
 
 
+######################## TRIGGERS & CONSTRAINS ########################
+#
+#######################################################################
 
+######################## QUESTION 1 ###################################
+
+DELIMITER //
+CREATE TRIGGER makeFriendly
+AFTER INSERT ON Highschooler
+FOR EACH ROW
+BEGIN
+    IF new.name = 'Friendly'
+    THEN
+    INSERT INTO Likes 
+        SELECT new.id 
+        FROM Highschooler as h
+        WHERE new.grade = h.grade AND NOT (new.id = h.id);
+    END IF;
+END; //
+DELIMITER ;
+
+######################## QUESTION 2 ###################################
+
+DELIMITER //
+CREATE TRIGGER checkGrade
+BEFORE INSERT ON Highschooler
+FOR EACH ROW
+BEGIN
+	IF new.grade IS NULL
+		THEN SET new.grade = 9;
+    ELSEIF (new.grade < 9 OR new.grade > 12)
+		THEN SET new.grade = NULL;
+    END IF;
+END; //
+DELIMITER ;
+
+######################## QUESTION 3 ###################################
