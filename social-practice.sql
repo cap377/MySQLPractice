@@ -255,11 +255,42 @@ BEGIN
 END; //
 DELIMITER ;
 
+DELIMITER //
+CREATE TRIGGER deletingFriendship
+BEFORE DELETE ON Friend
+FOR EACH ROW
+BEGIN
+	IF (SELECT COUNT(*) FROM Friend WHERE ID2 = new.ID1 AND ID1 = new.ID2) = 1
+		THEN DELETE FROM Friend WHERE ID1 = new.ID2 AND ID2 = new.ID1;
+    END IF;
+END; //
+DELIMITER ;
+
 ######################## QUESTION 5 ###################################
 
+DELIMITER //
+CREATE TRIGGER levelUPFriends
+BEFORE UPDATE ON Highschooler
+FOR EACH ROW
+BEGIN
+	IF new.grade != old.grade
+		THEN UPDATE Highschooler SET new.grade = old.grade+1 WHERE ID = ID2;
+	ELSEIF (SELECT COUNT(*) FROM Friend WHERE ID2 = new.ID) > 0
+		THEN UPDATE Highschooler SET new.grade = old.grade+1 WHERE ID = ID1;
+    END IF;
+END; //
+DELIMITER ;
 
+######################## QUESTION 6 ###################################
 
-
-
-
+DELIMITER //
+CREATE TRIGGER changeFriendships
+BEFORE UPDATE ON Likes
+FOR EACH ROW
+BEGIN
+	IF (SELECT ID2 FROM Likes WHERE ID1 = new.ID1) IN (SELECT ID1 FROM Friend WHERE ID2 = new.ID2)
+		THEN DELETE FROM Friend WHERE (ID2 = new.ID2 AND ID1 = new.ID1) OR (ID1 = new.ID2 AND ID2 = new.ID1);
+    END IF;
+END; //
+DELIMITER ;
 
