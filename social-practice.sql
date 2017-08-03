@@ -182,6 +182,17 @@ SELECT
         FROM
             Highschooler) AS 'Friend Average';
 
+######################## QUESTION 5 ###################################
 
+SELECT count(*) as 'Friends of Cassandra'
+FROM Friend 
+WHERE ID1 IN (SELECT ID2 
+			FROM Friend 
+			WHERE ID2 IN 
+			(SELECT ID2 
+				FROM Friend 
+                WHERE ID1 = 4)
+			)
+ORDER BY ID1;
 
-
+######################## QUESTION 6 ###################################
